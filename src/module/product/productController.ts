@@ -1,14 +1,48 @@
 
 import { Request, Response, NextFunction } from "express";
 import * as productService from "./productService";
+import uploadToCloudinary from "../../config/cloudinaryConfig"; 
+
+
 
 // Create a new product (Admin, Manager)
-const createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  
+  // console.log("Received data:", req.body);
   try {
-    const product = await productService.createProduct(req.body);
+    const { title, description, category, price, stock, brand, sizes, colors, tags } = req.body;
+
+    // Check if files exist in request
+    let imageUrls: string[] = [];
+    if (req.files && Array.isArray(req.files)) {
+      const uploadPromises = (req.files as Express.Multer.File[]).map(async (file) => {
+        const result = await uploadToCloudinary(file.path, "products"); // Upload to Cloudinary
+        console.log(result)
+        return result.secure_url;
+      });
+
+      imageUrls = await Promise.all(uploadPromises);
+    }
+    console.log(imageUrls)
+
+    const productData = {
+      title,
+      description,
+      category,
+      price,
+      stock,
+      brand,
+      sizes,
+      colors,
+      tags,
+      images: imageUrls, // Store Cloudinary URLs
+    };
+
+    const product = await productService.createProduct(productData);
+    // console.log(product)
     res.status(201).json({ success: true, message: "Product created", data: product });
   } catch (error) {
-    next(error); // Pass error to Express error handler
+    next(error);
   }
 };
 

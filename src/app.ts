@@ -10,6 +10,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(express.urlencoded({ extended: true })); // For handling URL encoded data
 app.use(cookieParser());
 
 // Use the routes defined in RootRouters
@@ -22,7 +23,7 @@ app.get('/', (req: Request, res: Response) => {
 
 // Global error handling middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.status || 500).json({
+   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
   });

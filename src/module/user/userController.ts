@@ -211,7 +211,69 @@ const registerUserController = async (req: Request, res: Response) => {
 };
 
 // Login user
-export const loginUserController = async (req: Request, res: Response, next: NextFunction) => {
+// export const loginUserController = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { email, password } = req.body;
+//     const { user, accessToken, refreshToken } = await userService.loginUser(email, password);
+
+//     res.cookie("refreshToken", refreshToken, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       sameSite: "strict",
+//       maxAge: 30 * 24 * 60 * 60 * 1000,
+//     });
+
+//     return res.json({
+//       user: {
+//         name: user.name,
+//         email: user.email,
+//         role: user.role,
+//         avatar: user.avatar,
+//       },
+//       accessToken,
+//     });
+//   } catch (error) {
+//     return res.status(400).json({ success: false, message: error });
+// };
+// }
+
+
+//  const loginUserController = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ): Promise<Response | void> => {
+//   try {
+//     const { email, password } = req.body;
+//     const { user, accessToken, refreshToken } = await userService.loginUser(email, password);
+
+//     res.cookie("refreshToken", refreshToken, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       sameSite: "strict",
+//       maxAge: 30 * 24 * 60 * 60 * 1000,
+//     });
+
+//     return res.json({
+//       user: {
+//         name: user.name,
+//         email: user.email,
+//         role: user.role,
+//         avatar: user.avatar,
+//       },
+//       accessToken,
+//     });
+//   } catch (error) {
+//     return res.status(400).json({ success: false, message: error });
+//   }
+// };
+
+
+const loginUserController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=> {
   try {
     const { email, password } = req.body;
     const { user, accessToken, refreshToken } = await userService.loginUser(email, password);
@@ -223,7 +285,7 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    return res.json({
+     res.json({
       user: {
         name: user.name,
         email: user.email,
@@ -233,9 +295,13 @@ export const loginUserController = async (req: Request, res: Response, next: Nex
       accessToken,
     });
   } catch (error) {
-    return res.status(400).json({ success: false, message: error });
+    res.status(400).json({ success: false, message: error });
+  }
 };
-}
+
+
+
+
 
 // Get all users with pagination, search, and filter
 const getAllUsersController = async (req: Request, res: Response) => {

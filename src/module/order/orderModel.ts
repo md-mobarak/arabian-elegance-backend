@@ -1,8 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-// import { IOrder } from '../../interfaces/IOrder';
-// import { IOrder } from '../../interfaces/IOrder';
 
-  
 export interface IOrder extends Document {
     name: string;
     email?: string; // 👈 Made optional using '?'

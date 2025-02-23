@@ -5,10 +5,12 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "../module/user/userModel";
 
+
 export const protect = async (req: any, res: Response, next: NextFunction): Promise<void> => {
   try {
     let token = req.headers.authorization?.split(" ")[1];
 
+      //  console.log(token);
     if (!token) {
       res.status(401).json({ success: false, message: "Unauthorized" });
       return; // Exit function
@@ -16,7 +18,7 @@ export const protect = async (req: any, res: Response, next: NextFunction): Prom
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
     const user = await User.findById(decoded.id).select("-password");
-
+      // console.log(decoded,'it is user',user)
     if (!user) {
       res.status(401).json({ success: false, message: "User not found" });
       return;
