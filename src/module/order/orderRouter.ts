@@ -12,7 +12,8 @@ router.post('/', OrderController.createOrder);
 // Get orders by phone number
 router.get('/phone/:phone', OrderController.getOrderByPhone); 
 // 🔒 Manager & Admin Routes
-router.get('/',  protect, authorize("admin", "manager"),OrderController.getAllOrders); // Includes Pagination, Filtering, and Search
+// protect, authorize("admin", "manager"),
+router.get('/', OrderController.getAllOrders); // Includes Pagination, Filtering, and Search
 router.get('/:id', OrderController.getOrderById);
 router.put('/:id', OrderController.updateOrder);
 router.delete('/:id', OrderController.deleteOrder);

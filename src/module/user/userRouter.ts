@@ -11,6 +11,7 @@ router.post("/register", userControllers.registerUserController);
 router.post("/login", userControllers.loginUserController);
 
 // Get all users (accessible by admin)
+// protect, authorize("admin")
 router.get("/", protect, authorize("admin"), userControllers.getAllUsersController);
 
 // Get user by ID (accessible by the user themselves or admin)
