@@ -46,31 +46,63 @@ export const deleteUser = async (id: string) => {
   return user;
 };
 
-// Get all users with pagination, search, and filters
+// // Get all users with pagination, search, and filters
+// export const getAllUsers = async (
+//   page = 1,
+//   limit = 10,
+//   filters = {},
+//   search = ""
+// ) => {
+//   const query: any = {
+//     ...filters,
+//     $or: [
+//       { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
+//       { email: { $regex: search, $options: "i" } }, // Search by email (case-insensitive)
+//     ],
+//   };
+
+//   const users = await User.find(query)
+//     .skip((page - 1) * limit)
+//     .limit(limit);
+
+//   const totalUsers = await User.countDocuments(query);
+//   const totalPages = Math.ceil(totalUsers / limit);
+
+//   return { users, totalUsers, totalPages };
+// };
 export const getAllUsers = async (
   page = 1,
   limit = 10,
   filters = {},
   search = ""
 ) => {
-  const query: any = {
-    ...filters,
-    $or: [
-      { name: { $regex: search, $options: "i" } }, // Search by name (case-insensitive)
-      { email: { $regex: search, $options: "i" } }, // Search by email (case-insensitive)
-    ],
-  };
+  // কুয়েরি বিল্ডিং লজিক ঠিক করুন
+  const query: any = { ...filters };
+
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // ফিল্টার থেকে খালি ভ্যালু রিমুভ করুন
+  Object.keys(query).forEach(key => {
+    if (query[key] === "" || query[key] === undefined) {
+      delete query[key];
+    }
+  });
 
   const users = await User.find(query)
     .skip((page - 1) * limit)
-    .limit(limit);
+    .limit(limit)
+    .sort({ createdAt: -1 }); // সর্টিং যোগ করুন
 
   const totalUsers = await User.countDocuments(query);
   const totalPages = Math.ceil(totalUsers / limit);
 
   return { users, totalUsers, totalPages };
 };
-
 // Get single user by ID
 export const getUserById = async (id: string) => {
   const user = await User.findById(id);

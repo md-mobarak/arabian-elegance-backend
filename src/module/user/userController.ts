@@ -32,9 +32,10 @@ const loginUserController = async (
       sameSite: "strict",
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-
+      // console.log(user)
      res.json({
       user: {
+        id:user._id,
         name: user.name,
         email: user.email,
         role: user.role,
@@ -51,26 +52,64 @@ const loginUserController = async (
 
 
 
-// Get all users with pagination, search, and filter
+// // Get all users with pagination, search, and filter
+// const getAllUsersController = async (req: Request, res: Response) => {
+//   try {
+//     const { page = 1, limit = 10, search = "", ...filters } = req.query;
+//     const { users, totalUsers, totalPages } = await userService.getAllUsers(
+//       Number(page),
+//       Number(limit),
+//       filters,
+//       search as string
+//     );
+//     res.status(200).json({
+//       success: true,
+//       data: users,
+//       pagination: { totalUsers, totalPages, currentPage: page },
+//     });
+//   } catch (error) {
+//     res.status(400).json({ success: false, message: error });
+//   }
+// };
 const getAllUsersController = async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 10, search = "", ...filters } = req.query;
+    
+    // নিউমেরিক কনভার্শন নিশ্চিত করুন
+    const parsedPage = Math.max(Number(page), 1);
+    const parsedLimit = Math.max(Number(limit), 1);
+
+    // ফিল্টার থেকে আনওয়ান্টেড ফিল্ড রিমুভ করুন
+    const cleanFilters = Object.fromEntries(
+      Object.entries(filters).filter(([key]) => 
+        ["role", "isVerified"].includes(key)
+      )
+    );
+
     const { users, totalUsers, totalPages } = await userService.getAllUsers(
-      Number(page),
-      Number(limit),
-      filters,
+      parsedPage,
+      parsedLimit,
+      cleanFilters,
       search as string
     );
+
     res.status(200).json({
       success: true,
       data: users,
-      pagination: { totalUsers, totalPages, currentPage: page },
+      pagination: { 
+        totalUsers, 
+        totalPages, 
+        currentPage: parsedPage,
+        itemsPerPage: parsedLimit 
+      },
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error });
+    res.status(400).json({ 
+      success: false, 
+      message: error instanceof Error ? error.message : "Unknown error" 
+    });
   }
 };
-
 // Get single user by ID
 const getUserByIdController = async (req: Request, res: Response) => {
   try {
