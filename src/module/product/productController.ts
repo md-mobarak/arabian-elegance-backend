@@ -8,18 +8,18 @@ import Product from "./productModel";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { title, description, category, price, stock, brand, sizes, colors, tags } = req.body;
+    const { title, description, category, price, stock, brand, sizes, colors, tags,images } = req.body;
 
-    let imageUrls: string[] = [];
-    if (req.files && Array.isArray(req.files)) {
-      const uploadPromises = (req.files as Express.Multer.File[]).map(async (file) => {
-        const result = await uploadToCloudinary(file.path, "products");
-        // console.log(result);
-        return result.secure_url;
-      });
+    // let imageUrls: string[] = [];
+    // if (req.files && Array.isArray(req.files)) {
+    //   const uploadPromises = (req.files as Express.Multer.File[]).map(async (file) => {
+    //     const result = await uploadToCloudinary(file.path, "products");
+    //     // console.log(result);
+    //     return result.secure_url;
+    //   });
 
-      imageUrls = await Promise.all(uploadPromises);
-    }
+    //   imageUrls = await Promise.all(uploadPromises);
+    // }
     // console.log(imageUrls);
 
     const productData = {
@@ -32,11 +32,12 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
       sizes,
       colors,
       tags,
-      images: imageUrls,
+      images
     };
 
     const product = await productService.createProduct(productData);
     res.status(201).json({ success: true, message: "Product created", data: product });
+    // console.log(product);
   } catch (error) {
     next(error);
   }

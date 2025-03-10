@@ -20,16 +20,7 @@ const categorySchema = new Schema<ICategory>(
     description: {
       type: String,
     },
-    images: [
-        {
-          type: String,
-        },
-      ],
-    parentCategory: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      default: null,
-    },
+    images: { type: [String], },
     createdAt: {
       type: Date,
       default: Date.now,

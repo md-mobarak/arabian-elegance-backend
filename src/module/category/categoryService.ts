@@ -9,16 +9,14 @@ export const CategoryService = {
 
 
 // 🔍 Get All Categories (With Pagination, Search & Parent Category Filter)
-getAllCategories: async (page: number, limit: number, search?: string, parentCategory?: string) => {
+getAllCategories: async (page: number, limit: number, search?: string, ) => {
     const query: any = {};
   
     if (search) {
       query.name = { $regex: search, $options: "i" };
     }
   
-    if (parentCategory) {
-      query.parentCategory = parentCategory;
-    }
+  
   
     const categories = await Category.find(query)
       .skip((page - 1) * limit)

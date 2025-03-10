@@ -20,7 +20,15 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
-
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-frontend-domain.com'] 
+    : 'http://localhost:3000',
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+};
 // OPTIONS রিকোয়েস্ট হ্যান্ডেলিং
 app.options('*', cors());
 // Use the routes defined in RootRouters
@@ -31,14 +39,12 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Welcome to Arabian Elegance E-commerce API');
 });
 
-
+// Sample route
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
 // Allow specific origins in production
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-frontend-domain.com'] 
-    : '*',
-  credentials: true
-};
+
 
 app.use(cors(corsOptions));
 
@@ -51,3 +57,4 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 export default app;
+// export default app;

@@ -6,7 +6,9 @@ import { CategoryService } from "./categoryService";
 const createCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const category = await CategoryService.createCategory(req.body);
+    // console.log(category);
     res.status(201).json({ success: true, message: "Category created successfully", data: category });
+  // console.log(category)
   } catch (error) {
     next(error);
   }
@@ -15,12 +17,11 @@ const createCategory = async (req: Request, res: Response, next: NextFunction): 
 // Get all categories with search, filter, and pagination
 const getAllCategories = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const { page = 1, limit = 10, search, parentCategory } = req.query;
+      const { page = 1, limit = 10, search} = req.query;
       const result = await CategoryService.getAllCategories(
         Number(page),
         Number(limit),
         search as string,
-        parentCategory ? String(parentCategory) : undefined
       );
       res.status(200).json({ success: true, ...result });
     } catch (error) {
