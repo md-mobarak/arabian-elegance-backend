@@ -121,13 +121,16 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import rootRoute from './module/routes';
-
+import fileUpload from 'express-fileupload';
 dotenv.config();
 const app = express();
+app.use(express.json());
 
 // CORS Configuration (Production & Mobile Friendly)
 const allowedOrigins = [
   'https://arabian-elegance-03.vercel.app',
+  'https://arabian-elegance-03.vercel.app',
+  '*',
   'https://arabianelegancebd.com',
   'http://localhost:3000',
   // Mobile-specific domains or IPs (if any)
@@ -152,19 +155,27 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 // Performance Middleware
-app.use(express.json({ limit: '10mb' })); // Prevent large payloads
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '20mb' })); // Prevent large payloads
+app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 app.use(cookieParser());
-
-// API Response Compression (Install 'compression' package)
+app.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+}));
 import compression from 'compression';
 app.use(compression());
+
+// API Response Compression (Install 'compression' package)
+
 
 // Cache Headers Middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.set('Cache-Control', 'public, max-age=300'); // 5min cache for mobile
   next();
 });
+// Middleware
+
 
 // Routes
 app.use('/api/v1', rootRoute);

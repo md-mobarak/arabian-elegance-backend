@@ -43,7 +43,7 @@ const ProductSchema = new mongoose_1.Schema({
     stock: { type: Number, required: true, min: 0 },
     brand: { type: String, trim: true },
     images: { type: [String], required: true }, // Array of image URLs
-    sizes: [{ type: String, enum: ["S", "M", "L", "XL", "XXL", 28, 30, 32, 34, 36, 38] }], // Available sizes
+    sizes: [{ type: String, enum: ["S", "M", "L", "XL", "XXL", 28, 30, 32, 34, 36, 38, 40, 42, 44] }], // Available sizes
     colors: { type: [String], default: [] }, // Optional colors
     tags: [{ type: String }], // Tags like "Panjabi", "Tencel"
     reviews: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: "Review" }], // Relationship with Review Model

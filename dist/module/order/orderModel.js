@@ -35,20 +35,34 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const OrderSchema = new mongoose_1.Schema({
-    name: { type: String, required: true, trim: true, },
-    email: { type: String, required: false, trim: true, }, // 👈 Not required
-    product: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'Product', required: true },
-    quantity: { type: Number, required: true, trim: true, },
-    phone: { type: Number, required: true, trim: true, },
-    district: { type: String, required: true, trim: true, },
-    thana: { type: String, required: true, trim: true, },
-    village: { type: String, required: true, trim: true, },
-    streetAddress: { type: String, required: true, trim: true, },
-    status: { type: String, enum: ['pending', 'shipped', 'delivered', 'cancelled'], default: 'pending' },
-    additionalInformation: { type: String, required: false, trim: true, }, // 👈 Already optional
-    totalAmount: { type: Number, required: true, trim: true, },
-    paymentStatus: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
-    orderDate: { type: Date, default: Date.now },
-    updatedAt: { type: Date }
+    name: { type: String, required: true, trim: true },
+    email: { type: String, trim: true },
+    products: [{
+            product: {
+                type: mongoose_1.default.Schema.Types.ObjectId,
+                ref: 'Product',
+                required: true
+            },
+            quantity: { type: Number, required: true },
+            price: { type: Number, required: true }
+        }],
+    phone: { type: Number, required: true },
+    district: { type: String, required: true, trim: true },
+    thana: { type: String, required: true, trim: true },
+    village: { type: String, required: true, trim: true },
+    streetAddress: { type: String, required: true, trim: true },
+    status: {
+        type: String,
+        enum: ['pending', 'shipped', 'delivered', 'cancelled'],
+        default: 'pending'
+    },
+    additionalInformation: { type: String, trim: true },
+    totalAmount: { type: Number, required: true },
+    paymentStatus: {
+        type: String,
+        enum: ['paid', 'unpaid'],
+        default: 'unpaid'
+    },
+    orderDate: { type: Date, default: Date.now }
 }, { timestamps: true });
 exports.default = mongoose_1.default.model('Order', OrderSchema);

@@ -38,16 +38,6 @@ const productService = __importStar(require("./productService"));
 const createProduct = async (req, res, next) => {
     try {
         const { title, description, category, price, stock, brand, sizes, colors, tags, images } = req.body;
-        // let imageUrls: string[] = [];
-        // if (req.files && Array.isArray(req.files)) {
-        //   const uploadPromises = (req.files as Express.Multer.File[]).map(async (file) => {
-        //     const result = await uploadToCloudinary(file.path, "products");
-        //     // console.log(result);
-        //     return result.secure_url;
-        //   });
-        //   imageUrls = await Promise.all(uploadPromises);
-        // }
-        // console.log(imageUrls);
         const productData = {
             title,
             description,
